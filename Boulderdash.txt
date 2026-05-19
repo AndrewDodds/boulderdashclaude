@@ -1,0 +1,32 @@
+Boulderdash
+
+This game has you moving around a world represented by a grid of 32x32 tiles, of which 20x16 are visible on the screen around the player. 
+
+There is a one tile thick border which is impassible
+
+These tiles can be empty space, dirt, boulders, diamonds or an exit.
+
+Mobile entities are diamond enemies, and explosive enemies
+
+A explosion tile cycles through an explosion animation and then vanishes 
+
+The player can move freely through empty space using the arrow keys.
+
+When the player moves into a dirt space, the dirt is removed
+
+When the player moves into a diamond space, the diamond is collected and removed
+
+The player cannot move into a boulder space
+
+The exit becomes available when enough diamonds have been collected
+
+If there is nothing in the tile below a boulder it starts to fall.
+
+If the boulder hits the player, the player dies in a 3x3 explosion
+
+If the boulder hits a diamond enemy, the enemy dies in a 3x3 explosion of diamonds
+
+If the boulder hits an explosive enemy, the enemy dies in a 3x3 explosion
+
+Being caught in an explosion has the same effect as being hit by a boulder
+
