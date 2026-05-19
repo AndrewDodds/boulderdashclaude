@@ -40,6 +40,7 @@ class GameScreen:
         self.level              = Level()
         self.player             = Player(*self.level.player_start)
         self.diamonds_collected = 0
+        self.level_complete     = False
         self.anim_frame         = 0
         self.anim_timer         = 0
         self.physics_timer      = 0
@@ -103,6 +104,9 @@ class GameScreen:
 
         self.player.x = nx
         self.player.y = ny
+
+        if self.level.tiles[ny][nx] == Tile.OPENEXIT:
+            self.level_complete = True
 
         if self._enemy_at(nx, ny) is not None:
             self.player.alive = False
@@ -320,6 +324,8 @@ class GameScreen:
                 self._physics_step()
                 if not self.player.alive and not self.explosions:
                     return
+            if self.level_complete:
+                return
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
