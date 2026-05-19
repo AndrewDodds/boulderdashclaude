@@ -49,6 +49,10 @@ class Level:
             x, y = rng.randint(2, self.width - 2), rng.randint(2, self.height - 2)
             self.tiles[y][x] = Tile.DIAMOND
 
+        for _ in range(1):
+            x, y = rng.randint(4, self.width - 4), rng.randint(4, self.height - 4)
+            self.tiles[y][x] = Tile.SLIME
+
         # Enemies — placed in open pockets so they have room to move
         types = ["diamond", "explosive"]
         for i in range(6):

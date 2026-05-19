@@ -86,13 +86,18 @@ class Enemy1Tile(TileBase):
 class Enemy2Tile(TileBase):
     sheet_frames = [(6, 4), (6, 5), (6, 6), (6, 7)]
 
+class SlimeTile(TileBase):
+    tile_type    = Tile.SLIME
+    sheet_frames = [(4, 4), (4, 5), (4, 6), (4, 7)]
+
 
 TILE_CLASSES: dict[Tile, type[TileBase]] = {
-    Tile.EMPTY:   EmptyTile,
-    Tile.WALL:    WallTile,
-    Tile.DIRT:    DirtTile,
-    Tile.BOULDER: BoulderTile,
-    Tile.DIAMOND: DiamondTile,
-    Tile.EXIT:    ExitTile,
-    Tile.OPENEXIT:    OpenExitTile,
+    Tile.EMPTY:    EmptyTile,
+    Tile.WALL:     WallTile,
+    Tile.DIRT:     DirtTile,
+    Tile.BOULDER:  BoulderTile,
+    Tile.DIAMOND:  DiamondTile,
+    Tile.EXIT:     ExitTile,
+    Tile.OPENEXIT: OpenExitTile,
+    Tile.SLIME:    SlimeTile,
 }

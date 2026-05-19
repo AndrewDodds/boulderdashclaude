@@ -1,4 +1,5 @@
 import math
+import random
 import sys
 import pygame
 from constants import TILE_SIZE, COLS, ROWS, WIDTH, HEIGHT
@@ -82,7 +83,14 @@ class GameScreen:
         ny   = self.player.y + dy
         tile = self.level.tiles[ny][nx]
 
-        if tile in (Tile.WALL, Tile.BOULDER, Tile.EXIT):
+        if tile == Tile.BOULDER:
+            # Can only push sideways, and only into an empty tile
+            if dy != 0 or self.level.tiles[ny][nx + dx] != Tile.EMPTY:
+                return
+            self.level.tiles[ny][nx + dx] = Tile.BOULDER
+            self.level.tiles[ny][nx]      = Tile.EMPTY
+
+        elif tile in (Tile.WALL, Tile.EXIT):
             return
 
         if tile == Tile.DIRT:
@@ -95,6 +103,10 @@ class GameScreen:
 
         self.player.x = nx
         self.player.y = ny
+
+        if self._enemy_at(nx, ny) is not None:
+            self.player.alive = False
+            self._trigger_explosion(self.player.x, self.player.y)
 
     def _enemy_at(self, x, y):
         for enemy in self.enemies:
@@ -157,6 +169,17 @@ class GameScreen:
 
         self.falling = new_falling
         self._update_explosions()
+        self._slime_step()
+
+        occupied = {(e.x, e.y) for e in self.enemies if e.alive}
+        for enemy in self.enemies:
+            if enemy.alive:
+                occupied.discard((enemy.x, enemy.y))
+                enemy.update(self.level.tiles, occupied)
+                occupied.add((enemy.x, enemy.y))
+                if enemy.x == self.player.x and enemy.y == self.player.y:
+                    self.player.alive = False
+                    self._trigger_explosion(self.player.x, self.player.y)
 
     def _trigger_explosion(self, cx, cy, leave_diamonds=False):
         fill = Tile.DIAMOND if leave_diamonds else Tile.EMPTY
@@ -167,6 +190,40 @@ class GameScreen:
                     if self.level.tiles[y][x] != Tile.WALL:
                         self.level.tiles[y][x] = fill
                         self.explosions[(x, y)] = 0
+                    hit = self._enemy_at(x, y)
+                    if hit is not None:
+                        hit.alive = False
+
+    def _slime_step(self):
+        tiles   = self.level.tiles
+        IMMUNE  = {Tile.WALL, Tile.BOULDER, Tile.DIAMOND,
+                   Tile.EXIT, Tile.OPENEXIT, Tile.SLIME}
+        SPREADS = {Tile.EMPTY, Tile.DIRT}
+
+        slime_cells = [
+            (x, y)
+            for y in range(1, self.level.height - 1)
+            for x in range(1, self.level.width  - 1)
+            if tiles[y][x] == Tile.SLIME
+        ]
+
+        for sx, sy in slime_cells:
+            for dx, dy in ((0, -1), (1, 0), (0, 1), (-1, 0)):
+                nx, ny = sx + dx, sy + dy
+
+                if self.player.alive and nx == self.player.x and ny == self.player.y:
+                    self.player.alive = False
+                    self._trigger_explosion(nx, ny)
+                    continue
+
+                hit = self._enemy_at(nx, ny)
+                if hit is not None:
+                    hit.alive = False
+                    self._trigger_explosion(nx, ny, hit.diamond_explosion)
+                    continue
+
+                if tiles[ny][nx] in SPREADS and random.random() < 0.02:
+                    tiles[ny][nx] = Tile.SLIME
 
     def _update_explosions(self):
         finished = [pos for pos, frame in self.explosions.items()
