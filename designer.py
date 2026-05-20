@@ -2,13 +2,18 @@ import sys
 import os
 import math
 import glob
+import random
 import pygame
 from constants import TILE_SIZE, COLS, ROWS, WIDTH, HEIGHT
 from tile import Tile
 from tiles import load_sheet, TILE_CLASSES, PlayerTile, Enemy1Tile, Enemy2Tile
 from level import Level
 
-SHEET_BLUE = "images/bd_blue_big.png"
+_SHEETS = {
+    "blue":  "images/bd_blue_big.png",
+    "red":   "images/bd_red_big.png",
+    "green": "images/bd_green_big.png",
+}
 CAM_SPEED  = 8.0
 ANIM_MS    = 250
 PALETTE_H  = TILE_SIZE + 22   # sprite row + key-label row
@@ -46,14 +51,14 @@ class LevelDesigner:
     def __init__(self, screen, clock, level_path=None):
         self.screen = screen
         self.clock  = clock
-        load_sheet(SHEET_BLUE)
-
         if level_path and os.path.exists(level_path):
             self.level     = Level.from_file(level_path)
             self.save_path = level_path
         else:
             self.level     = self._blank_level()
             self.save_path = self._next_path()
+
+        load_sheet(_SHEETS[self.level.colour])
 
         self.cursor_x, self.cursor_y = self.level.player_start
         self.selected   = 0
@@ -116,8 +121,7 @@ class LevelDesigner:
     # Placement
     # ------------------------------------------------------------------
 
-    def _place(self):
-        x, y     = self.cursor_x, self.cursor_y
+    def _place_at(self, x, y):
         _, _, item = PALETTE[self.selected]
         if isinstance(item, Tile):
             self.level.tiles[y][x] = item
@@ -133,6 +137,16 @@ class LevelDesigner:
                 s for s in self.level.enemy_spawns if (s[0], s[1]) != (x, y)
             ]
             self.level.enemy_spawns.append((x, y, etype))
+
+    def _place(self):
+        self._place_at(self.cursor_x, self.cursor_y)
+
+    def _scatter(self, count=20):
+        interior = [(x, y)
+                    for x in range(1, self.level.width  - 1)
+                    for y in range(1, self.level.height - 1)]
+        for x, y in random.sample(interior, min(count, len(interior))):
+            self._place_at(x, y)
 
     # ------------------------------------------------------------------
     # Dialogs
@@ -277,7 +291,9 @@ class LevelDesigner:
             self.screen.blit(lbl, lbl.get_rect(centerx=cx, top=bar_y + TILE_SIZE + 5))
 
     def _draw_hud(self):
-        txt  = f"Diamonds needed: {self.level.diamonds_required}  [+/-]"
+        colour_label = {"blue": "Blue [B]", "red": "Red [R]", "green": "Green [G]"}
+        txt  = (f"Diamonds: {self.level.diamonds_required} [+/-]"
+                f"    Colour: {colour_label[self.level.colour]}")
         surf = self._fsm.render(txt, True, YELLOW)
         pad  = 4
         bg   = pygame.Surface((surf.get_width() + pad*2, surf.get_height() + pad*2),
@@ -324,13 +340,21 @@ class LevelDesigner:
                         self.cursor_x = max(0, min(self.cursor_x + dx, self.level.width  - 1))
                         self.cursor_y = max(0, min(self.cursor_y + dy, self.level.height - 1))
 
-                    elif event.key in (pygame.K_SPACE, pygame.K_RETURN):
+                    elif event.key == pygame.K_SPACE:
                         self._place()
+                    elif event.key == pygame.K_RETURN:
+                        self._scatter()
 
                     elif event.key in (pygame.K_PLUS, pygame.K_EQUALS, pygame.K_KP_PLUS):
                         self.level.diamonds_required += 1
                     elif event.key in (pygame.K_MINUS, pygame.K_KP_MINUS):
                         self.level.diamonds_required = max(1, self.level.diamonds_required - 1)
+
+                    elif event.key in (pygame.K_b, pygame.K_r, pygame.K_g):
+                        new = {pygame.K_b: "blue", pygame.K_r: "red", pygame.K_g: "green"}[event.key]
+                        if new != self.level.colour:
+                            self.level.colour = new
+                            load_sheet(_SHEETS[new])
 
             self._draw()
             pygame.display.flip()

@@ -1,4 +1,5 @@
 diamonds=5
+colour=blue
 ---
 WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
 WP.............................W

@@ -1,4 +1,5 @@
 diamonds=20
+colour=red
 ---
 WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
 WP............................~W

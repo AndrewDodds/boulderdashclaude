@@ -23,6 +23,7 @@ class Level:
         self.tiles             = [[Tile.EMPTY] * LEVEL_W for _ in range(LEVEL_H)]
         self.player_start      = (2, 2)
         self.diamonds_required = 10
+        self.colour            = "blue"   # "blue", "red", or "green"
         self.enemy_spawns: list[tuple[int, int, str]] = []
 
     @classmethod
@@ -43,7 +44,9 @@ class Level:
 
     def save_to_file(self, path):
         spawn_map = {(x, y): t for x, y, t in self.enemy_spawns}
-        lines = [f"diamonds={self.diamonds_required}", "---"]
+        lines = [f"diamonds={self.diamonds_required}",
+                 f"colour={self.colour}",
+                 "---"]
         for y in range(self.height):
             row = []
             for x in range(self.width):
@@ -69,8 +72,11 @@ class Level:
         for line in header.splitlines():
             if '=' in line:
                 key, _, val = line.partition('=')
-                if key.strip() == 'diamonds':
-                    self.diamonds_required = int(val.strip())
+                k, v = key.strip(), val.strip()
+                if k == 'diamonds':
+                    self.diamonds_required = int(v)
+                elif k == 'colour' and v in ('blue', 'red', 'green'):
+                    self.colour = v
 
         map_rows = [line for line in map_text.splitlines() if line]
         for y, row_str in enumerate(map_rows):

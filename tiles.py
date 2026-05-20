@@ -8,6 +8,8 @@ _sheet: pygame.Surface | None = None
 def load_sheet(path: str) -> None:
     global _sheet
     _sheet = pygame.image.load(path).convert()
+    for cls in TileBase.__subclasses__():
+        cls._cache = []
 
 
 class TileBase:

@@ -8,9 +8,11 @@ from tiles import load_sheet, TILE_CLASSES, PlayerTile, ExplosionTile, DiamondTi
 from entities import DiamondEnemy, ExplosiveEnemy
 from level import Level
 
-SHEET_BLUE  = "images/bd_blue_big.png"
-SHEET_RED   = "images/bd_red_big.png"
-SHEET_GREEN = "images/bd_green_big.png"
+_SHEETS = {
+    "blue":  "images/bd_blue_big.png",
+    "red":   "images/bd_red_big.png",
+    "green": "images/bd_green_big.png",
+}
 
 ANIM_MS      = 250   # ms per animation frame
 PHYSICS_MS   = 200   # ms per physics step
@@ -33,11 +35,11 @@ class Player:
 
 
 class GameScreen:
-    def __init__(self, screen, clock, sheet=SHEET_BLUE, level_path=None):
+    def __init__(self, screen, clock, level_path=None):
         self.screen = screen
         self.clock  = clock
-        load_sheet(sheet)
         self.level              = Level.from_file(level_path) if level_path else Level.random()
+        load_sheet(_SHEETS[self.level.colour])
         self.player             = Player(*self.level.player_start)
         self.diamonds_collected = 0
         self.level_complete     = False
