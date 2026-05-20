@@ -2,19 +2,101 @@ import random
 from tile import Tile
 from constants import LEVEL_W, LEVEL_H
 
+# Character encoding used in level files
+CHAR_TO_TILE = {
+    'W': Tile.WALL,
+    ' ': Tile.EMPTY,
+    '.': Tile.DIRT,
+    'O': Tile.BOULDER,
+    '*': Tile.DIAMOND,
+    'X': Tile.EXIT,
+    '~': Tile.SLIME,
+}
+_TILE_TO_CHAR  = {t: c for c, t in CHAR_TO_TILE.items()}
+_ENEMY_TO_CHAR = {'diamond': 'd', 'explosive': 'e'}
+
 
 class Level:
     def __init__(self):
-        self.width    = LEVEL_W
-        self.height   = LEVEL_H
-        self.tiles    = [[Tile.EMPTY] * LEVEL_W for _ in range(LEVEL_H)]
-        self.player_start        = (2, 2)   # (x, y)
-        self.diamonds_required   = 10
-        self.enemy_spawns: list[tuple[int, int, str]] = []  # (x, y, type)
-        self._build_test_level()
+        self.width             = LEVEL_W
+        self.height            = LEVEL_H
+        self.tiles             = [[Tile.EMPTY] * LEVEL_W for _ in range(LEVEL_H)]
+        self.player_start      = (2, 2)
+        self.diamonds_required = 10
+        self.enemy_spawns: list[tuple[int, int, str]] = []
+
+    @classmethod
+    def random(cls):
+        level = cls()
+        level._build_random()
+        return level
+
+    @classmethod
+    def from_file(cls, path):
+        level = cls()
+        level._load_file(path)
+        return level
+
+    # ------------------------------------------------------------------
+    # File I/O
+    # ------------------------------------------------------------------
+
+    def save_to_file(self, path):
+        spawn_map = {(x, y): t for x, y, t in self.enemy_spawns}
+        lines = [f"diamonds={self.diamonds_required}", "---"]
+        for y in range(self.height):
+            row = []
+            for x in range(self.width):
+                if (x, y) == self.player_start:
+                    row.append('P')
+                elif (x, y) in spawn_map:
+                    row.append(_ENEMY_TO_CHAR[spawn_map[(x, y)]])
+                else:
+                    row.append(_TILE_TO_CHAR.get(self.tiles[y][x], ' '))
+            lines.append(''.join(row))
+        with open(path, 'w') as f:
+            f.write('\n'.join(lines) + '\n')
+
+    def _load_file(self, path):
+        with open(path) as f:
+            text = f.read()
+
+        if '---' in text:
+            header, _, map_text = text.partition('---')
+        else:
+            header, map_text = '', text
+
+        for line in header.splitlines():
+            if '=' in line:
+                key, _, val = line.partition('=')
+                if key.strip() == 'diamonds':
+                    self.diamonds_required = int(val.strip())
+
+        map_rows = [line for line in map_text.splitlines() if line]
+        for y, row_str in enumerate(map_rows):
+            if y >= self.height:
+                break
+            for x, ch in enumerate(row_str):
+                if x >= self.width:
+                    break
+                if ch in CHAR_TO_TILE:
+                    self.tiles[y][x] = CHAR_TO_TILE[ch]
+                elif ch == 'P':
+                    self.tiles[y][x] = Tile.EMPTY
+                    self.player_start = (x, y)
+                elif ch == 'd':
+                    self.tiles[y][x] = Tile.EMPTY
+                    self.enemy_spawns.append((x, y, 'diamond'))
+                elif ch == 'e':
+                    self.tiles[y][x] = Tile.EMPTY
+                    self.enemy_spawns.append((x, y, 'explosive'))
+
+    # ------------------------------------------------------------------
+    # Random generation
+    # ------------------------------------------------------------------
 
     # tiles[y][x] throughout
-    def _build_test_level(self):
+    def _build_random(self):
         # Impassable border
         for x in range(self.width):
             self.tiles[0][x]                = Tile.WALL

@@ -33,11 +33,11 @@ class Player:
 
 
 class GameScreen:
-    def __init__(self, screen, clock, sheet=SHEET_BLUE):
+    def __init__(self, screen, clock, sheet=SHEET_BLUE, level_path=None):
         self.screen = screen
         self.clock  = clock
         load_sheet(sheet)
-        self.level              = Level()
+        self.level              = Level.from_file(level_path) if level_path else Level.random()
         self.player             = Player(*self.level.player_start)
         self.diamonds_collected = 0
         self.level_complete     = False
@@ -323,9 +323,9 @@ class GameScreen:
                 self.physics_timer -= PHYSICS_MS
                 self._physics_step()
                 if not self.player.alive and not self.explosions:
-                    return
+                    return 'died'
             if self.level_complete:
-                return
+                return 'won'
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -333,7 +333,7 @@ class GameScreen:
                     sys.exit()
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
-                        return
+                        return 'died'
                     if event.key in ARROW_KEYS:
                         self._try_move(*ARROW_KEYS[event.key])
 
