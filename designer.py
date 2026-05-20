@@ -148,6 +148,14 @@ class LevelDesigner:
         for x, y in random.sample(interior, min(count, len(interior))):
             self._place_at(x, y)
 
+    def _stamp_3x3(self):
+        for dy in range(-1, 2):
+            for dx in range(-1, 2):
+                x = self.cursor_x + dx
+                y = self.cursor_y + dy
+                if 0 <= x < self.level.width and 0 <= y < self.level.height:
+                    self._place_at(x, y)
+
     # ------------------------------------------------------------------
     # Dialogs
     # ------------------------------------------------------------------
@@ -344,6 +352,8 @@ class LevelDesigner:
                         self._place()
                     elif event.key == pygame.K_RETURN:
                         self._scatter()
+                    elif event.key == pygame.K_TAB:
+                        self._stamp_3x3()
 
                     elif event.key in (pygame.K_PLUS, pygame.K_EQUALS, pygame.K_KP_PLUS):
                         self.level.diamonds_required += 1
