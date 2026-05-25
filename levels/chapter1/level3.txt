@@ -1,0 +1,35 @@
+diamonds=60
+colour=red
+---
+WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
+WP.O.OOOO...*...............O.*W
+W.......OO.O....O....*.O.O.....W
+W..O...O.......O..OO.O...O.....W
+W..O.   ..O..O.....OOOO..O..O..W
+W.*O.   .....*...O*OOO....*....W
+W..*O     ........O......O.....W
+W..O...   ...*O....   O.OO.OO..W
+W..O...O e  .....O.    ..O...OOW
+W.OO....Oee .O....*     ...O.O.W
+W...*....   .....OO.     .....OW
+WO.O....*......**....  eeeO..*.W
+W............O......OO eee ..*.W
+W.    .*O.  eee........eee  ...W
+W. ee ....  eeeO.O...*..     ..W
+W*    ....  eee.......OOO    .OW
+W........*.......*......O.   O.W
+W.*OO..O.....O.....   .........W
+W......O.OOO..O..*O    *.......W
+W.   .......*.... eee   O.OO..OW
+W. e ..........*O eee   .......W
+W.  e..O..O....O. eee   .O.....W
+W.........O..*....O    .*..O.O.W
+W..O*..O...O   *..O   .O.......W
+W......*OO..   .......O.....*O.W
+W.O.O.......   .O......O.......W
+W..OO..   .O e .....O..........W
+W......   ...e........   ..*...W
+W...*..  e..Oe..O..O..e  O.*...W
+W..................*..   ......W
+WO.O............O.............XW
+WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW

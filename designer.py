@@ -95,9 +95,16 @@ class LevelDesigner:
     @staticmethod
     def _next_path():
         base = os.path.join(os.path.dirname(os.path.abspath(__file__)), "levels")
-        os.makedirs(base, exist_ok=True)
-        n = len(glob.glob(os.path.join(base, "level*.txt"))) + 1
-        return os.path.join(base, f"level{n}.txt")
+        for ch in range(1, 4):
+            chapter_dir = os.path.join(base, f"chapter{ch}")
+            os.makedirs(chapter_dir, exist_ok=True)
+            existing = glob.glob(os.path.join(chapter_dir, "level*.txt"))
+            if len(existing) < 5:
+                return os.path.join(chapter_dir, f"level{len(existing) + 1}.txt")
+        # All chapters full — append to chapter3
+        chapter_dir = os.path.join(base, "chapter3")
+        n = len(glob.glob(os.path.join(chapter_dir, "level*.txt"))) + 1
+        return os.path.join(chapter_dir, f"level{n}.txt")
 
     # ------------------------------------------------------------------
     # Camera
@@ -201,6 +208,76 @@ class LevelDesigner:
             self.screen.blit(self._fsm.render("Enter = save  Esc = cancel", True, (150,150,150)), (bx+12, by+86))
             pygame.display.flip()
 
+    def _run_load_dialog(self):
+        base = os.path.join(os.path.dirname(os.path.abspath(__file__)), "levels")
+        files = sorted(glob.glob(os.path.join(base, "**", "*.txt"), recursive=True))
+        if not files:
+            return False
+
+        abs_save = os.path.abspath(self.save_path)
+        selected = 0
+        for i, f in enumerate(files):
+            if os.path.abspath(f) == abs_save:
+                selected = i
+                break
+
+        max_visible = 10
+        scroll = 0
+
+        while True:
+            self.clock.tick(60)
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit(); sys.exit()
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_RETURN:
+                        self._load_level(files[selected])
+                        return True
+                    elif event.key == pygame.K_ESCAPE:
+                        return False
+                    elif event.key == pygame.K_UP:
+                        selected = max(0, selected - 1)
+                        if selected < scroll:
+                            scroll = selected
+                    elif event.key == pygame.K_DOWN:
+                        selected = min(len(files) - 1, selected + 1)
+                        if selected >= scroll + max_visible:
+                            scroll = selected - max_visible + 1
+
+            row_h = 24
+            bw    = 530
+            bh    = 56 + min(len(files), max_visible) * row_h + 20
+            bx    = (WIDTH  - bw) // 2
+            by    = (HEIGHT - bh) // 2
+
+            overlay = pygame.Surface((WIDTH, HEIGHT), pygame.SRCALPHA)
+            overlay.fill((0, 0, 0, 190))
+            self.screen.blit(overlay, (0, 0))
+            pygame.draw.rect(self.screen, (20, 20, 50),  (bx, by, bw, bh))
+            pygame.draw.rect(self.screen, (80, 80, 200), (bx, by, bw, bh), 2)
+
+            self.screen.blit(self._flg.render("Load level:", True, YELLOW), (bx + 12, by + 8))
+
+            for i in range(min(max_visible, len(files))):
+                fi   = scroll + i
+                rel  = os.path.relpath(files[fi], base).replace("\\", "/")
+                ry   = by + 44 + i * row_h
+                if fi == selected:
+                    pygame.draw.rect(self.screen, (50, 50, 120), (bx + 4, ry, bw - 8, row_h - 1))
+                colour = (255, 255, 255) if fi == selected else (160, 160, 160)
+                self.screen.blit(self._fsm.render(rel, True, colour), (bx + 12, ry + 4))
+
+            hint = self._fsm.render("↑↓ = navigate   Enter = open   Esc = cancel", True, (100, 100, 100))
+            self.screen.blit(hint, (bx + 12, by + bh - 17))
+            pygame.display.flip()
+
+    def _load_level(self, path):
+        self.level     = Level.from_file(path)
+        self.save_path = path
+        load_sheet(_SHEETS[self.level.colour])
+        self.cursor_x, self.cursor_y = self.level.player_start
+        self.cam_x, self.cam_y = self._camera_target()
+
     def _run_exit_dialog(self):
         while True:
             self.clock.tick(60)
@@ -301,7 +378,8 @@ class LevelDesigner:
     def _draw_hud(self):
         colour_label = {"blue": "Blue [B]", "red": "Red [R]", "green": "Green [G]"}
         txt  = (f"Diamonds: {self.level.diamonds_required} [+/-]"
-                f"    Colour: {colour_label[self.level.colour]}")
+                f"    Colour: {colour_label[self.level.colour]}"
+                f"    ^O=Open  ^S=Save")
         surf = self._fsm.render(txt, True, YELLOW)
         pad  = 4
         bg   = pygame.Surface((surf.get_width() + pad*2, surf.get_height() + pad*2),
@@ -339,6 +417,9 @@ class LevelDesigner:
 
                     elif event.key == pygame.K_s and pygame.key.get_mods() & pygame.KMOD_CTRL:
                         self._run_save_dialog()
+
+                    elif event.key == pygame.K_o and pygame.key.get_mods() & pygame.KMOD_CTRL:
+                        self._run_load_dialog()
 
                     elif event.key in _NUM_KEYS:
                         self.selected = _NUM_KEYS[event.key]

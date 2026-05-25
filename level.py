@@ -27,9 +27,9 @@ class Level:
         self.enemy_spawns: list[tuple[int, int, str]] = []
 
     @classmethod
-    def random(cls):
+    def random(cls, seed=42, difficulty=None):
         level = cls()
-        level._build_random()
+        level._build_random(seed=seed, difficulty=difficulty)
         return level
 
     @classmethod
@@ -102,7 +102,22 @@ class Level:
     # ------------------------------------------------------------------
 
     # tiles[y][x] throughout
-    def _build_random(self):
+    def _build_random(self, seed=42, difficulty=None):
+        d = {
+            'pockets':  8,
+            'boulders': 30,
+            'diamonds': 20,
+            'slime':     1,
+            'enemies':   6,
+            'colour':   'blue',
+            'diamonds_required': 10,
+        }
+        if difficulty:
+            d.update(difficulty)
+
+        self.colour            = d['colour']
+        self.diamonds_required = d['diamonds_required']
+
         # Impassable border
         for x in range(self.width):
             self.tiles[0][x]                = Tile.WALL
@@ -116,10 +131,10 @@ class Level:
             for x in range(1, self.width - 1):
                 self.tiles[y][x] = Tile.DIRT
 
-        rng = random.Random(42)
+        rng = random.Random(seed)
 
         # Carve open pockets before placing objects
-        for _ in range(8):
+        for _ in range(d['pockets']):
             cx = rng.randint(2, self.width  - 3)
             cy = rng.randint(2, self.height - 3)
             w  = rng.randint(2, 5)
@@ -130,20 +145,20 @@ class Level:
                     if 1 <= nx < self.width - 1 and 1 <= ny < self.height - 1:
                         self.tiles[ny][nx] = Tile.EMPTY
 
-        for _ in range(30):
+        for _ in range(d['boulders']):
             x, y = rng.randint(2, self.width - 2), rng.randint(2, self.height - 2)
             self.tiles[y][x] = Tile.BOULDER
-        for _ in range(20):
+        for _ in range(d['diamonds']):
             x, y = rng.randint(2, self.width - 2), rng.randint(2, self.height - 2)
             self.tiles[y][x] = Tile.DIAMOND
 
-        for _ in range(1):
+        for _ in range(d['slime']):
             x, y = rng.randint(4, self.width - 4), rng.randint(4, self.height - 4)
             self.tiles[y][x] = Tile.SLIME
 
         # Enemies — placed in open pockets so they have room to move
         types = ["diamond", "explosive"]
-        for i in range(6):
+        for i in range(d['enemies']):
             x = rng.randint(4, self.width  - 4)
             y = rng.randint(4, self.height - 4)
             self.enemy_spawns.append((x, y, types[i % 2]))
