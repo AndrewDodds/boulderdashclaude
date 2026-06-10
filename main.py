@@ -33,7 +33,7 @@ def run_title_screen(screen, clock):
 
         screen.fill(BLACK)
 
-        title = font_title.render("BOULDERDASH", True, YELLOW)
+        title = font_title.render("PEBBLEDASH", True, YELLOW)
         screen.blit(title, title.get_rect(center=(WIDTH // 2, HEIGHT // 3)))
 
         cy = HEIGHT * 2 // 3
@@ -127,7 +127,7 @@ def get_chapters():
 def main():
     pygame.init()
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
-    pygame.display.set_caption("Boulderdash")
+    pygame.display.set_caption("Pebbledash")
     clock = pygame.time.Clock()
 
     while True:

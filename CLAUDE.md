@@ -4,9 +4,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-A Python implementation of the classic Boulderdash arcade game. The project is in its early stage — the spec and image assets exist but no source code has been written yet.
+A Python implementation of the classic Pebbledash arcade game. The project is in its early stage — the spec and image assets exist but no source code has been written yet.
 
-## Game Mechanics (from `Boulderdash.txt`)
+## Game Mechanics (from `Pebbledash.txt`)
 
 - **World**: Grid of 32×32 tiles; 20×16 tiles visible at once, centered on the player
 - **Border**: One-tile-thick impassable border surrounds the map
@@ -26,11 +26,11 @@ A Python implementation of the classic Boulderdash arcade game. The project is i
 
 ## Image Assets (`images/`)
 
-The sprite sheets are classic Boulderdash tilesets; the `.xcf` files are the editable GIMP sources for the `.png` exports.
+The sprite sheets are classic Pebbledash tilesets; the `.xcf` files are the editable GIMP sources for the `.png` exports.
 
 | File | Contents |
 | --- | --- |
-| `bd_blue.png` / `bd_blue_big.png` | Blue-palette Boulderdash sprite sheet (tiles, player frames, entities) |
+| `bd_blue.png` / `bd_blue_big.png` | Blue-palette Pebbledash sprite sheet (tiles, player frames, entities) |
 | `bd_red_big.png` | Red-palette variant of the same sprite sheet |
 | `bd_green_big.png` | Green-palette variant of the same sprite sheet |
 | `Sci_Fi_C.png` | Sci-fi themed entity sprites (player character, enemies) |
