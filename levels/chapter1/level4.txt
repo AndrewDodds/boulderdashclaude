@@ -4,32 +4,32 @@ colour=green
 WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
 WP....W....O.  OOOWOOOOOOOOOOOOW
 W.....W   ...  ...W.....O......W
-W.....W..   WO ...W.O.....e.O..W
-W WWW.W.....W...O.W.....O.   d.W
-W WWW.WO..O.W....OW.OO..W.   .OW
-W W.W.W.....W..O..W...O.W.   ..W
-W.OOO.WO....W.....WO....We   ..W
-W.OOO.We d..W.d e.W..Od.W.ede.OW
-W.O.O.W  ..OW  ed.WO.. .W..d...W
-W..d..W.....W     W    .W....OOW
-W..  eW.....W     W    .W....OOW
-W.e  .WO....W     W   d.O.O..OOW
-W....OW..O..W  d  O.....W....OOW
+W.....W..   WO ...W.O..... .O..W
+W WWW.W.....W...O.W.....O.OOO .W
+W WWW.WO..O.W....OW.OO..W.OOO.OW
+W W.W.W.....W..O..W...O.W.OOO..W
+W..OO.WO....W.....WO....W    ..W
+W.OOO.We ...W.  e.W.OOO.W.ede.OW
+W.....W  ..OW   d.WOOOO.W..d...W
+W.. ..W.....W     W OOO.W....OOW
+W..  eW.....W     W OOO.W....OOW
+W.   .WO....W   . W OOO.O.O..OOW
+W....OW..O..W  .  O.....W....OOW
 W.....W.....W O   W...O.WO.....W
-W.....W    .WOe   W   ..WOO..  W
+W.....W    .WOe   W   ..WOO... W
 WO....W    .W.....W   ..W....OeW
-WOO...W..OO.WO....W   e.Wd..OO.W
+WOO...W..OO.WO....W   e.W...OO.W
 W.....W.....W.....W..O..W O....W
-W  d..Wd...OWO....WdOOOOW .Oe..W
-W   e.W ....W...O.W.....W .O ..W
+W  d..WO...OWO....W OOOOW .OO..W
+W   ..W ....W...O.W.....W .O ..W
 W.....Wd....W.O...W..O..W .. OOW
-W...O.W O.e.W.....OOOOO.W O e..W
-W.....W    .W..O..W.....W  O eOW
-W....OWeO...W.....W.....W ....OW
-W.....W .dO.W.O...W ...eW d... W
-W.....W   ..W.....W  ee W  de..W
-W  e.O .  ..W...O.d   O W O.O..W
-W e ..O.. ..W...O.O e   W ..O.OW
+W...O.W O...W....OOOOOO.W O e..W
+WOO...W   ..W..O.OW.....W  O eOW
+W....OWeO...W....OW.....W ....OW
+W.....W .dO.W.O..OW ...eW .... W
+W.....W   ..W.....W  .. W  ....W
+W  ..O .  ..W...O.    O W O.O..W
+W e ..O.. ..W...O.O     W ..O.OW
 WO O.......OW...O..     W .....W
 WO......O...W......  OeOW ....XW
 WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW

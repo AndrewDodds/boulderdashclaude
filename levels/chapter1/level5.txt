@@ -11,7 +11,7 @@ W.OOOOOOOOOOOOOOOOOOOOOOOO  O..W
 W.............OOOOOOOOOOOO *O*OW
 W.......*.....OOOOOOOOO...  O..W
 W......................*..  O..W
-W.....***..*.e....O.e.OOO.OOO..W
+W.....***..*.e....O.*.OOO.OOO..W
 W.....*...... .*....O.OOO.OOO..W
 W..O..*...... ...... *OOO.OOO..W
 W....O*......  O ...  *........W
@@ -31,5 +31,5 @@ W....   .d..*.  *...O........  W
 W......   ....e      e    ...OOW
 W...... e  d..      e   e ..O..W
 W...*.. ee ..OO*       e  .....W
-W......  e .....eeeO    O..... W
+W~.....  e .....eeeO    O..... W
 WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
