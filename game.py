@@ -213,6 +213,8 @@ class GameScreen:
             if tiles[y][x] == Tile.SLIME
         ]
 
+        can_expand = False
+
         for sx, sy in slime_cells:
             for dx, dy in ((0, -1), (1, 0), (0, 1), (-1, 0)):
                 nx, ny = sx + dx, sy + dy
@@ -228,8 +230,14 @@ class GameScreen:
                     self._trigger_explosion(nx, ny, hit.diamond_explosion)
                     continue
 
-                if tiles[ny][nx] in SPREADS and random.random() < 0.02:
-                    tiles[ny][nx] = Tile.SLIME
+                if tiles[ny][nx] in SPREADS:
+                    can_expand = True
+                    if random.random() < 0.02:
+                        tiles[ny][nx] = Tile.SLIME
+
+        if not can_expand:
+            for sx, sy in slime_cells:
+                tiles[sy][sx] = Tile.DIAMOND
 
     def _update_explosions(self):
         finished = [pos for pos, frame in self.explosions.items()
