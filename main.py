@@ -2,7 +2,7 @@ import sys
 import os
 import glob
 import pygame
-from constants import WIDTH, HEIGHT
+from constants import WIDTH, HEIGHT, resource_path
 from game import GameScreen
 from designer import LevelDesigner
 
@@ -115,7 +115,7 @@ def show_message(screen, clock, text, colour=RED, duration_ms=2500):
 
 
 def get_chapters():
-    base = os.path.join(os.path.dirname(os.path.abspath(__file__)), "levels")
+    base = resource_path("levels")
     chapters = []
     for i in range(1, NUM_CHAPTERS + 1):
         chapter_dir = os.path.join(base, f"chapter{i}")
@@ -141,14 +141,19 @@ def main():
             chapter_idx = run_chapter_select(screen, clock, chapters)
             if chapter_idx is None:
                 continue
-            level_files = chapters[chapter_idx]
-            for level_path in level_files:
-                result = GameScreen(screen, clock, level_path=level_path).run()
-                if result != 'won':
-                    break
-            else:
-                show_message(screen, clock,
-                             f"Chapter {chapter_idx + 1} complete!", colour=YELLOW)
+
+            while chapter_idx < NUM_CHAPTERS:
+                for level_path in chapters[chapter_idx]:
+                    result = GameScreen(screen, clock, level_path=level_path).run()
+                    if result != 'won':
+                        break
+                else:
+                    show_message(screen, clock,
+                                 f"Chapter {chapter_idx + 1} complete!", colour=YELLOW)
+                    chapter_idx += 1
+                    if chapter_idx < NUM_CHAPTERS and chapters[chapter_idx]:
+                        continue
+                break
 
         elif mode == 'designer':
             LevelDesigner(screen, clock).run()

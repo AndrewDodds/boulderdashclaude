@@ -2,16 +2,16 @@ import math
 import random
 import sys
 import pygame
-from constants import TILE_SIZE, COLS, ROWS, WIDTH, HEIGHT
+from constants import TILE_SIZE, COLS, ROWS, WIDTH, HEIGHT, resource_path
 from tile import Tile
 from tiles import load_sheet, TILE_CLASSES, PlayerTile, ExplosionTile, DiamondTile
 from entities import DiamondEnemy, ExplosiveEnemy
 from level import Level
 
 _SHEETS = {
-    "blue":  "images/bd_blue_big.png",
-    "red":   "images/bd_red_big.png",
-    "green": "images/bd_green_big.png",
+    "blue":  resource_path("images/bd_blue_big.png"),
+    "red":   resource_path("images/bd_red_big.png"),
+    "green": resource_path("images/bd_green_big.png"),
 }
 
 ANIM_MS      = 250   # ms per animation frame
